@@ -43,6 +43,9 @@ func calculateRoute(arr StoreArrangement, list GroceryList) *Route {
 				i = len(itemLocs) - i - 1
 			}
 			itemLoc := itemLocs[i]
+			if s.y == Row("back") {
+				itemLoc.Location.Side = itemLoc.Location.Side.Flip()
+			}
 			route.AddStep(RouteStep{Location: itemLoc.Location, Item: itemLoc.Item})
 		}
 		s.y = s.y.Flip()

@@ -10,9 +10,10 @@ func main() {
 	route := calculateRoute(arrangement, list)
 	for _, step := range route.Steps() {
 		fmt.Printf(
-			"%-20v %s\n",
-			step.Location,
-			string(step.Item),
+			"%-10s %-10s %s\n",
+			step.Location.Aisle,
+			step.Location.Side,
+			step.Item,
 		)
 	}
 }
