@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -54,10 +53,8 @@ func calculateRoute(arr StoreArrangement, list GroceryList) *Route {
 				itemLoc.Location.Side = itemLoc.Location.Side.Flip()
 			}
 			route.AddStep(RouteStep{Location: itemLoc.Location, Item: itemLoc.Item})
-			fmt.Printf("location: %s; item: %s\n", itemLoc.Location, itemLoc.Item)
 		}
 		s.y = s.y.Flip()
-		fmt.Printf("s.y: %s\n", s.y)
 	}
 
 	return route

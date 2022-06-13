@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 type Aisle string
 
 type AisleRegion string
@@ -60,7 +56,6 @@ func (s LocationSorter) Len() int {
 }
 
 func (s LocationSorter) Less(i, j int) bool {
-	fmt.Printf("s: %v; i: %d; j: %d\n", s, i, j)
 	if s[i].Region == s[j].Region {
 		return false
 	}
@@ -134,9 +129,7 @@ func (s itemLocationSorter) Len() int {
 }
 
 func (s itemLocationSorter) Less(i, j int) bool {
-	b := LocationSorter([]Location{s[i].Location, s[j].Location}).Less(0, 1)
-	fmt.Printf("b: %v\n", b)
-	return b
+	return LocationSorter([]Location{s[i].Location, s[j].Location}).Less(0, 1)
 }
 
 func (s itemLocationSorter) Swap(i, j int) {
