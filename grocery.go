@@ -12,13 +12,13 @@ func groceryList() GroceryList {
 	return GroceryList([]GroceryListItem{
 		GroceryListItem("milk"),
 		GroceryListItem("coffee"),
-		GroceryListItem("carrots"),
-		GroceryListItem("cheddar"),
-		GroceryListItem("english muffins"),
-		GroceryListItem("red onion"),
 		GroceryListItem("bars"),
-		GroceryListItem("frozen pizza"),
 		GroceryListItem("pasta sauce"),
 		GroceryListItem("pasta"),
+		GroceryListItem("dip"),
+		GroceryListItem("crackers"),
+		GroceryListItem("red onion"),
+		GroceryListItem("carrots"),
+		GroceryListItem("yogurt"),
 	})
 }

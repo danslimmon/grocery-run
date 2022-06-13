@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 type Aisle string
 
 type AisleRegion string
@@ -39,9 +43,10 @@ type Location struct {
 	Side AisleSide
 }
 
+// Sorts locations from front to back of store.
 type LocationSorter []Location
 
-func (sorter LocationSorter) ordering() []AisleRegion {
+func (s LocationSorter) ordering() []AisleRegion {
 	return []AisleRegion{
 		AisleRegion("front"),
 		AisleRegion("middle"),
@@ -50,36 +55,47 @@ func (sorter LocationSorter) ordering() []AisleRegion {
 	}
 }
 
-func (sorter LocationSorter) Len() int {
-	return len(sorter)
+func (s LocationSorter) Len() int {
+	return len(s)
 }
 
-func (sorter LocationSorter) Less(i, j int) bool {
-	o := sorter.ordering()
-	if o[i] == o[j] {
+func (s LocationSorter) Less(i, j int) bool {
+	fmt.Printf("s: %v; i: %d; j: %d\n", s, i, j)
+	if s[i].Region == s[j].Region {
 		return false
 	}
+	o := s.ordering()
 	for _, region := range o {
-		if region == o[i] {
+		if region == s[i].Region {
 			return true
 		}
-		if region == o[j] {
+		if region == s[j].Region {
 			return false
 		}
 	}
-	panic("unkown aisle regions " + o[i] + " and " + o[j])
+	panic("unkown aisle regions " + s[i].Region + " and " + s[j].Region)
 }
 
-func (sorter LocationSorter) Swap(i, j int) {
-	tmp := sorter[i]
-	sorter[i] = sorter[j]
-	sorter[j] = tmp
+func (s LocationSorter) Swap(i, j int) {
+	tmp := s[i]
+	s[i] = s[j]
+	s[j] = tmp
 }
 
-func stopAndShopLayout() StoreLayout {
+func stopAndShopNorthHavenLayout() StoreLayout {
 	return StoreLayout{
 		Aisles: []Aisle{
-			Aisle("Bakery"),
+			Aisle("Aisle 24"),
+			Aisle("Aisle 23"),
+			Aisle("Aisle 22"),
+			Aisle("Aisle 21"),
+			Aisle("Aisle 20"),
+			Aisle("Aisle 19"),
+			Aisle("Aisle 18"),
+			Aisle("Aisle 17"),
+			Aisle("Aisle 16"),
+			Aisle("Aisle 15"),
+			Aisle("Aisle 14"),
 			Aisle("Aisle 13"),
 			Aisle("Aisle 12"),
 			Aisle("Aisle 11"),
@@ -110,9 +126,29 @@ type itemLocation struct {
 	Location Location
 }
 
+// Sorts itemLocations from front to back of store.
+type itemLocationSorter []itemLocation
+
+func (s itemLocationSorter) Len() int {
+	return len(s)
+}
+
+func (s itemLocationSorter) Less(i, j int) bool {
+	b := LocationSorter([]Location{s[i].Location, s[j].Location}).Less(0, 1)
+	fmt.Printf("b: %v\n", b)
+	return b
+}
+
+func (s itemLocationSorter) Swap(i, j int) {
+	tmp := s[i]
+	s[i] = s[j]
+	s[j] = tmp
+}
+
 // FindItems returns the locations of items on the list that are in the aisle.
 //
-// The return value is not ordered.
+// The returned items are ordered by aisle (in the same order specified in the layout), but within
+// aisles they are not guaranteed to be ordered in any particular way.
 func (arr StoreArrangement) FindItems(aisle Aisle, list GroceryList) []itemLocation {
 	itemLocations := []itemLocation{}
 	for item, location := range arr.placements {
@@ -133,20 +169,22 @@ func (arr StoreArrangement) FindItems(aisle Aisle, list GroceryList) []itemLocat
 	return rslt
 }
 
-func stopAndShopArrangement() StoreArrangement {
+func stopAndShopNorthHavenArrangement() StoreArrangement {
 	return StoreArrangement{
-		layout: stopAndShopLayout(),
+		layout: stopAndShopNorthHavenLayout(),
 		placements: map[GroceryListItem]Location{
-			GroceryListItem("milk"):            Location{Aisle: Aisle("Aisle 13"), Region: AisleRegion("back"), Side: AisleSide("right")},
-			GroceryListItem("cheddar"):         Location{Aisle: Aisle("Aisle 13"), Region: AisleRegion("back"), Side: AisleSide("right")},
-			GroceryListItem("coffee"):          Location{Aisle: Aisle("Aisle 6"), Region: AisleRegion("front"), Side: AisleSide("left")},
-			GroceryListItem("bars"):            Location{Aisle: Aisle("Aisle 6"), Region: AisleRegion("back"), Side: AisleSide("right")},
+			GroceryListItem("milk"):            Location{Aisle: Aisle("Aisle 24"), Region: AisleRegion("behind")},
+			GroceryListItem("coffee"):          Location{Aisle: Aisle("Aisle 8"), Region: AisleRegion("back"), Side: AisleSide("left")},
+			GroceryListItem("bars"):            Location{Aisle: Aisle("Aisle 14"), Region: AisleRegion("front"), Side: AisleSide("right")},
 			GroceryListItem("carrots"):         Location{Aisle: Aisle("Produce")},
+			GroceryListItem("dip"):             Location{Aisle: Aisle("Produce"), Region: AisleRegion("middle")},
 			GroceryListItem("red onion"):       Location{Aisle: Aisle("Produce")},
 			GroceryListItem("english muffins"): Location{Aisle: Aisle("Aisle 10"), Region: AisleRegion("back"), Side: AisleSide("right")},
 			GroceryListItem("frozen pizza"):    Location{Aisle: Aisle("Aisle 12"), Region: AisleRegion("back"), Side: AisleSide("right")},
-			GroceryListItem("pasta sauce"):     Location{Aisle: Aisle("Aisle 7"), Region: AisleRegion("middle"), Side: AisleSide("right")},
-			GroceryListItem("pasta"):           Location{Aisle: Aisle("Aisle 7"), Region: AisleRegion("middle"), Side: AisleSide("left")},
+			GroceryListItem("pasta"):           Location{Aisle: Aisle("Aisle 4"), Region: AisleRegion("front"), Side: AisleSide("left")},
+			GroceryListItem("pasta sauce"):     Location{Aisle: Aisle("Aisle 4"), Region: AisleRegion("front"), Side: AisleSide("right")},
+			GroceryListItem("crackers"):        Location{Aisle: Aisle("Aisle 8"), Region: AisleRegion("front"), Side: AisleSide("right")},
+			GroceryListItem("yogurt"):          Location{Aisle: Aisle("Aisle 14"), Region: AisleRegion("behind")},
 		},
 	}
 }

@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"sort"
+)
+
 type RouteStep struct {
 	Location Location
 	Item     GroceryListItem
@@ -37,6 +42,8 @@ func calculateRoute(arr StoreArrangement, list GroceryList) *Route {
 			continue
 		}
 
+		sort.Sort(itemLocationSorter(itemLocs))
+
 		// Go up the aisle and grab items as they occur
 		for i := range itemLocs {
 			if s.y == Row("back") {
@@ -47,8 +54,10 @@ func calculateRoute(arr StoreArrangement, list GroceryList) *Route {
 				itemLoc.Location.Side = itemLoc.Location.Side.Flip()
 			}
 			route.AddStep(RouteStep{Location: itemLoc.Location, Item: itemLoc.Item})
+			fmt.Printf("location: %s; item: %s\n", itemLoc.Location, itemLoc.Item)
 		}
 		s.y = s.y.Flip()
+		fmt.Printf("s.y: %s\n", s.y)
 	}
 
 	return route
