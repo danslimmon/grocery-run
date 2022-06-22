@@ -10,15 +10,17 @@ func (list GroceryList) RemainingItems() []GroceryListItem {
 
 func groceryList() GroceryList {
 	return GroceryList([]GroceryListItem{
-		GroceryListItem("milk"),
-		GroceryListItem("coffee"),
-		GroceryListItem("bars"),
-		GroceryListItem("pasta sauce"),
+		GroceryListItem("vegetable oil"),
+		GroceryListItem("eggs"),
+		GroceryListItem("english muffins"),
 		GroceryListItem("pasta"),
-		GroceryListItem("dip"),
-		GroceryListItem("crackers"),
-		GroceryListItem("red onion"),
-		GroceryListItem("carrots"),
+		GroceryListItem("pasta sauce"),
+		GroceryListItem("cereal"),
+		GroceryListItem("coffee"),
+		GroceryListItem("mac and cheese"),
+		GroceryListItem("milk"),
+		GroceryListItem("frozen pizza"),
+		GroceryListItem("frozen meatballs"),
 		GroceryListItem("yogurt"),
 	})
 }
