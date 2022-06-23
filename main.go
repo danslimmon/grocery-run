@@ -17,4 +17,9 @@ func main() {
 			step.Item,
 		)
 	}
+
+	fmt.Printf("\nUnfound:\n")
+	for _, unfoundItem := range route.Unfound() {
+		fmt.Printf("%s\n", unfoundItem)
+	}
 }

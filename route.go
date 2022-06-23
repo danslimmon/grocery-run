@@ -10,7 +10,8 @@ type RouteStep struct {
 }
 
 type Route struct {
-	steps []RouteStep
+	steps   []RouteStep
+	unfound []GroceryListItem
 }
 
 func (rt *Route) AddStep(step RouteStep) {
@@ -19,6 +20,24 @@ func (rt *Route) AddStep(step RouteStep) {
 
 func (rt *Route) Steps() []RouteStep {
 	return rt.steps
+}
+
+func (rt *Route) Unfound() []GroceryListItem {
+	return rt.unfound
+}
+
+func (rt *Route) getUnfound(list GroceryList, found []GroceryListItem) []GroceryListItem {
+	rslt := make([]GroceryListItem, 0)
+OUTER:
+	for _, listItem := range list {
+		for _, foundItem := range found {
+			if listItem == foundItem {
+				continue OUTER
+			}
+		}
+		rslt = append(rslt, listItem)
+	}
+	return rslt
 }
 
 func calculateRoute(arr StoreArrangement, list GroceryList) *Route {
@@ -34,6 +53,7 @@ func calculateRoute(arr StoreArrangement, list GroceryList) *Route {
 		y: Row("front"),
 	}
 
+	found := make([]GroceryListItem, 0)
 	for _, aisle := range arr.layout.Aisles {
 		itemLocs := arr.FindItems(aisle, list)
 		if len(itemLocs) == 0 {
@@ -53,9 +73,11 @@ func calculateRoute(arr StoreArrangement, list GroceryList) *Route {
 				itemLoc.Location.Side = itemLoc.Location.Side.Flip()
 			}
 			route.AddStep(RouteStep{Location: itemLoc.Location, Item: itemLoc.Item})
+			found = append(found, itemLoc.Item)
 		}
 		s.y = s.y.Flip()
 	}
 
+	route.unfound = route.getUnfound(list, found)
 	return route
 }
