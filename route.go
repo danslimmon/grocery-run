@@ -75,6 +75,20 @@ func calculateRoute(arr StoreArrangement, list GroceryList) *Route {
 			route.AddStep(RouteStep{Location: itemLoc.Location, Item: itemLoc.Item})
 			found = append(found, itemLoc.Item)
 		}
+
+		// Flip y if the shopper has passed all the way through an aisle to the opposite row of the
+		// store.
+		//
+		// Don't flip y if last two items have both been behind the aisle – e.g. if you get milk
+		// behind aisle 24 then yogurt behind aisle 14, that doesn't necessitate walking all the way
+		// through aisle 14 to the front of the store.
+		steps := route.Steps()
+		if len(route.Steps()) == 1 {
+			continue
+		}
+		if steps[len(steps)-1].Location.Region == AisleRegion("behind") && s.y == Row("back") {
+			continue
+		}
 		s.y = s.y.Flip()
 	}
 
